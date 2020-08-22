@@ -2,35 +2,68 @@ import React, { Component } from "react";
 
 export default class TimerClass extends Component {
   state = {
-    mins: "00",
-    secs: "00",
+    seconds: "00",
+    value: "",
     isClicked: false,
   };
 
-  startCountDown = () => {};
+  tick() {
+    var min = Math.floor(this.secondsRemaining / 60);
+    var sec = this.secondsRemaining - min * 60;
+
+    this.setState({
+      value: min,
+      seconds: sec,
+    });
+
+    if (sec < 10) {
+      this.setState({
+        seconds: "0" + this.state.seconds,
+      });
+    }
+
+    if (min < 10) {
+      this.setState({
+        value: "0" + min,
+      });
+    }
+
+    if ((min === 0) & (sec === 0)) {
+      clearInterval(this.intervalHandle);
+    }
+
+    this.secondsRemaining--;
+  }
+
+  startCountDown = () => {
+    this.intervalHandle = setInterval(() => this.tick(), 1000);
+
+    this.secondsRemaining = this.state.value * 60;
+    this.setState({
+      isClicked: true,
+    });
+  };
   render() {
     return (
       <div>
-        <input
-          type="text"
-          value={this.state.mins}
-          onChange={(e) => {
-            this.setState({
-              mins: e.target.value,
-            });
-          }}
-        />
-        <input
-          type="text"
-          value={this.state.secs}
-          onChange={(e) => {
-            this.setState({
-              secs: e.target.value,
-            });
-          }}
-        />
-        <Timer time={this.state} />
-        <button onClick={this.startCountDown}>Start</button>
+        {this.state.isClicked ? (
+          <Timer value={this.state.value} seconds={this.state.seconds} />
+        ) : (
+          <div>
+            <label>Enter minutes</label>
+            <input
+              type="text"
+              value={this.state.value}
+              disabled={this.state.isClicked}
+              onChange={(e) => {
+                this.setState({
+                  value: e.target.value,
+                });
+              }}
+            />
+            <button onClick={this.startCountDown}>Start</button>
+          </div>
+        )}
       </div>
     );
   }
@@ -40,7 +73,7 @@ class Timer extends Component {
   render() {
     return (
       <span>
-        {this.props.time.mins}:{this.props.time.secs}
+        {this.props.value}:{this.props.seconds}
       </span>
     );
   }
