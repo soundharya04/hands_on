@@ -13,10 +13,13 @@ function App() {
       <Suspense fallback={<h1>Still Loading…</h1>}>
         <Artists />
         <button
-          onClick={() => {
-            import("./Components/Dynamic_import/Dynamic").then((res) =>
-              console.log(res.default())
-            );
+          onClick={async () => {
+            let outside;
+            await import("./Components/Dynamic_import/Dynamic").then((res) => {
+              console.log(res.default());
+              outside = res.default();
+            });
+            console.log(outside + " using await");
           }}
         >
           Dynamic
