@@ -10,17 +10,17 @@ function App() {
     <div>
       {/* <Clock />
       <TimerClass /> */}
-
-      {async () => {
-        await import("./Components/Dynamic_import/Dynamic").then((res) => {
-          console.log(res.default);
-          setDynamic(res.default);
-        });
-      }}
-
-      {Dynamic && <Dynamic />}
       <Suspense fallback={<h1>Still Loading…</h1>}>
         <Artists />
+        <button
+          onClick={() => {
+            import("./Components/Dynamic_import/Dynamic").then((res) =>
+              console.log(res.default())
+            );
+          }}
+        >
+          Dynamic
+        </button>
       </Suspense>
     </div>
   );

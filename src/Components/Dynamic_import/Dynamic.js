@@ -1,5 +1,7 @@
 import React from "react";
 
-const Dynamic = () => <div>I m dynamically rendered through onClick</div>;
+const Dynamic = () => {
+  return "I'm a function returning a string";
+};
 
 export default Dynamic;
